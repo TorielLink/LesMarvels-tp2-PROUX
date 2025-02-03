@@ -1,4 +1,15 @@
     </div>
 </div>
+<script>
+    async function changeView(viewType) {
+        try {
+            const response = await fetch(`/view?type=${viewType}`);
+            const content = await response.text();
+            document.getElementById('view-container').innerHTML = content;
+        } catch (error) {
+            console.error("Erreur lors du changement de vue :", error);
+        }
+    }
+</script>
 </body>
 </html>

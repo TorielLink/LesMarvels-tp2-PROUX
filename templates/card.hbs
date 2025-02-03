@@ -1,0 +1,11 @@
+{{#each characters}}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="{{this.image}}" alt="{{this.name}}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">{{this.name}}</h5>
+                <p class="card-text">{{this.description}}</p>
+            </div>
+        </div>
+    </div>
+{{/each}}

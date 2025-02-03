@@ -14,6 +14,8 @@ fastify.register(pointOfView, {
         partials: {
             header: 'header.hbs',
             footer: 'footer.hbs',
+            li: 'li.hbs',
+            card: 'card.hbs'
         },
     },
 });
@@ -22,13 +24,27 @@ fastify.get('/', async (request, reply) => {
     try {
         const endpoint = 'https://gateway.marvel.com/v1/public/characters';
         const characters = await getData(endpoint);
+        const viewType = request.query.view || 'card';
 
-        return reply.view('index.hbs', { characters });
+        return reply.view('index.hbs', { characters, isList: viewType === 'li' });
     } catch (error) {
         fastify.log.error(error);
         return reply.code(500).send('Erreur lors de la récupération des personnages.');
     }
 });
+
+fastify.get('/view', async (request, reply) => {
+    const endpoint = 'https://gateway.marvel.com/v1/public/characters';
+    const characters = await getData(endpoint);
+    const viewType = request.query.type;
+
+    if (viewType === 'li') {
+        return reply.view('li.hbs', { characters });
+    } else {
+        return reply.view('card.hbs', { characters });
+    }
+});
+
 
 const start = async () => {
     try {

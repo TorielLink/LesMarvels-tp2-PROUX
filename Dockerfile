@@ -1,12 +1,18 @@
-FROM node:lts-bullseye-slim
+FROM node:lts-bullseye-slim AS build
 LABEL authors="toris"
 
-RUN mkdir -p /home/node/app/node_modules
-RUN chown -R node:node /home/node/app
 WORKDIR /home/node/app
+
 COPY package*.json ./
 RUN npm install
-COPY src/ ./
-CMD node src/server.js
 
-ENTRYPOINT ["top", "-b"]
+FROM node:lts-bullseye-slim
+
+WORKDIR /home/node/app
+
+COPY --from=build /home/node/app/node_modules ./node_modules
+COPY src/ ./src
+
+USER node  # Sécurisation en exécutant avec un utilisateur non-root
+
+CMD ["node", "src/server.js"]
